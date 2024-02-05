@@ -12,38 +12,55 @@ public class mountains {
 
     public void start() {
         setArrays();
-      //  System.out.println(evens.toString());
+        System.out.println(evens.toString());
         int evenTotal = totalUpArray(evens);
-      //  System.out.println(odds.toString());
+        System.out.println(odds.toString());
         int oddTotal = totalUpArray(odds);
-      //  System.out.println(evenTotal + oddTotal);
 
         findMaxHeight();
+        buildMountains bm = new buildMountains(this);
+        bm.buildPeaks();
     }
     
     public void findMaxHeight() {
         int currentDiff = 0;
         int maxHeight = 0;
-        int holder = 0;
+        int currHeight = 0;
+        int tempMaxHeight = 0;
+        int maxIndex = 0;
         for (int i = 0; i < input.size()/2; i++) {
             currentDiff = evens.get(i) - odds.get(i);
-            System.out.println("current difference" + currentDiff);
-            holder += currentDiff;
-            //System.out.println(holder);
-            if (currentDiff==0) {
-                maxHeight++;
-            } else if (currentDiff>0) {
-                maxHeight+= currentDiff;
+            tempMaxHeight += evens.get(i);
+            currHeight += currentDiff;
+
+            //System.out.println(i+". current height: " + currHeight);
+            if (tempMaxHeight>=maxHeight) {
+                maxHeight=tempMaxHeight;
+                maxIndex = i;
             }
-            //System.out.println(maxHeight);
+            tempMaxHeight = currHeight;
+
         }
-        System.out.println(maxHeight);
+        //System.out.println("max index: " + maxIndex);
+        System.out.println("peak: " + maxHeight + " at space " + calculateMaxHeightLocation(evens, odds, maxIndex));
     }
     public static boolean isEven(int n) {
         if (n%2==0) {
             return true;
         }
         return false;
+    }
+
+    public int calculateMaxHeightLocation(ArrayList<Integer> array1, ArrayList<Integer> array2, int index) {
+        int loc = 0;
+        int currIndex=0;
+        for (int i = 0; i < index; i++) {
+            loc += array1.get(i) + array2.get(i);
+           // System.out.println(loc);
+            currIndex = i;
+        }
+        loc += array1.get(currIndex+1);
+        return loc;
     }
 
     public int totalUpArray(ArrayList<Integer> array) {
@@ -65,11 +82,24 @@ public class mountains {
         }
     }
 
+    public ArrayList<Integer> getInputArrays() {
+        return input;
+    }
+
+    public ArrayList<Integer> getEvens() {
+        return evens;
+    }
+
+    public ArrayList<Integer> getOdds() {
+        return odds;
+    }
+
+
+
     public static void main(String args[]) {
         mountains m = new mountains();
         m.start();
 
     }
-
-
 }
+
