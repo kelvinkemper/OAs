@@ -11,6 +11,7 @@ public class mountains {
 
     ArrayList<Integer> evens = new ArrayList<>();
     ArrayList<Integer> odds = new ArrayList<>();
+    int maxHeight=0;
 
 
     public void start() {
@@ -21,13 +22,13 @@ public class mountains {
         int oddTotal = totalUpArray(odds);
 
         findMaxHeight();
-        buildMountains bm = new buildMountains(this);
-        bm.buildPeaks();
+        makeGrid();
+       // buildMountains bm = new buildMountains(this);
+       // bm.buildPeaks();
     }
     
     public void findMaxHeight() {
         int currentDiff = 0;
-        int maxHeight = 0;
         int currHeight = 0;
         int tempMaxHeight = 0;
         int maxIndex = 0;
@@ -95,6 +96,17 @@ public class mountains {
 
     public ArrayList<Integer> getOdds() {
         return odds;
+    }
+
+
+    public void makeGrid() {
+        char grid[][] = new char[maxHeight][input.size()];
+        for (int row = maxHeight-1; row >= 0; row--) {
+            for(int col = 0; col < input.size(); col++) {
+                System.out.println(grid[row][col]);
+            }
+            System.out.println();
+        }
     }
 
 
