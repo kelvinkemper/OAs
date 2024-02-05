@@ -6,6 +6,9 @@ public class mountains {
     ArrayList<Integer> input = new ArrayList<>(Arrays.asList(1, 1, 3, 1, 2, 3, 5, 2, 1, 2, 2, 3, 7, 2, 3, 1, 2, 1, 3, 5, 2, 3, 1,
             2, 5, 7, 3, 1, 3, 4, 2, 5, 3, 2, 4, 4, 1, 2, 1, 3, 3, 2, 1, 2));
 
+    ArrayList<Integer> input2 = new ArrayList<>(Arrays.asList(10, 7, 12, 2, 4, 7, 2, 4, 1, 2, 6, 6, 3, 2, 1, 4, 7, 2, 7,
+            3, 1, 3, 11, 4, 2, 1, 5, 2, 3, 3, 3, 6, 1, 3, 9, 5, 2, 1, 2, 11, 9, 2, 3, 8, 2, 5, 1, 2, 7, 2, 4, 11, 2, 12));
+
     ArrayList<Integer> evens = new ArrayList<>();
     ArrayList<Integer> odds = new ArrayList<>();
 
