@@ -15,7 +15,6 @@ public class buildMountains {
 
     public void buildPeaks() {
         StringBuilder sb = new StringBuilder();
-        System.out.println(evens.size());
         for (int i = 0; i < input.size()/2; i++) {
             for (int j = 0; j < evens.get(i); j++) {
                 sb.append("/");
@@ -25,7 +24,7 @@ public class buildMountains {
             }
         }
 
-        System.out.println(sb);
+        //System.out.println(sb);
     }
 
 

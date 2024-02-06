@@ -11,7 +11,13 @@ public class mountains {
 
     ArrayList<Integer> evens = new ArrayList<>();
     ArrayList<Integer> odds = new ArrayList<>();
+
+    ArrayList<Integer> expandedEvens = new ArrayList<>();
+    ArrayList<Integer> expandedOdds = new ArrayList<>();
+
     int maxHeight=0;
+    int maxLoc=0;
+    int totalLength=0;
 
 
     public void start() {
@@ -22,9 +28,17 @@ public class mountains {
         int oddTotal = totalUpArray(odds);
 
         findMaxHeight();
+        findTotalLength();
         makeGrid();
-       // buildMountains bm = new buildMountains(this);
-       // bm.buildPeaks();
+        buildMountains bm = new buildMountains(this);
+        bm.buildPeaks();
+    }
+
+    public void findTotalLength() {
+        for (int i : input) {
+            totalLength += i;
+        }
+        System.out.println("Total length: " + totalLength);
     }
     
     public void findMaxHeight() {
@@ -38,13 +52,27 @@ public class mountains {
             currHeight += currentDiff;
 
             //System.out.println(i+". current height: " + currHeight);
-            if (tempMaxHeight>=maxHeight) {
-                maxHeight=tempMaxHeight;
+            if (tempMaxHeight >= maxHeight) {
+                maxHeight = tempMaxHeight;
                 maxIndex = i;
             }
             tempMaxHeight = currHeight;
-
         }
+       //     if (currentDiff >0) {
+       //         for (int j = 0; j < evens.get(i); j++) {
+       //             System.out.println("/ ");
+       //         }
+       //     } else if (currentDiff < 0) {
+       //         for (int j = 0; j < odds.get(i); j++) {
+       //             System.out.println("\\ ");
+       //
+       //         }
+       //     } else {
+       //         System.out.print("/ \\ ");
+       //     }
+       //     System.out.println();
+       //
+       // }
         //System.out.println("max index: " + maxIndex);
         System.out.println("peak: " + maxHeight + " at space " + calculateMaxHeightLocation(evens, odds, maxIndex));
     }
@@ -56,15 +84,14 @@ public class mountains {
     }
 
     public int calculateMaxHeightLocation(ArrayList<Integer> array1, ArrayList<Integer> array2, int index) {
-        int loc = 0;
         int currIndex=0;
         for (int i = 0; i < index; i++) {
-            loc += array1.get(i) + array2.get(i);
+            maxLoc += array1.get(i) + array2.get(i);
            // System.out.println(loc);
             currIndex = i;
         }
-        loc += array1.get(currIndex+1);
-        return loc;
+        maxLoc += array1.get(currIndex+1);
+        return maxLoc;
     }
 
     public int totalUpArray(ArrayList<Integer> array) {
@@ -100,12 +127,98 @@ public class mountains {
 
 
     public void makeGrid() {
-        char grid[][] = new char[maxHeight][input.size()];
-        for (int row = maxHeight-1; row >= 0; row--) {
-            for(int col = 0; col < input.size(); col++) {
-                System.out.println(grid[row][col]);
+        String grid[][] = new String[maxHeight+3][totalLength];
+
+      // for (int i = maxHeight-3; i<=maxHeight; i++) {
+      //     for (int col = 0; col < totalLength; col++) {
+      //         grid[i][col] = "";
+      //     }
+      // }
+
+        for (int row = 0; row <= maxHeight-3; row++) {
+
+            for(int col = 0; col < totalLength; col++) {
+                // keep track of current row/col
+                grid[row][col] = " ";
+            }
+        }
+        int colIndex=0;
+        int rowIndex=0;
+
+        int currentI=0;
+        while (currentI<maxLoc) {
+           // System.out.println("col index: " +colIndex);
+           // System.out.println("row index: " + rowIndex);
+            if (evens.get(colIndex).equals(1)) {
+
+                grid[rowIndex][currentI] = "/";
+                toString(grid);
+                currentI++;
+            }
+
+            else if (evens.get(colIndex) > 1) {
+                for (int i = 0; i < evens.get(colIndex); i++) {
+                    grid[rowIndex][currentI] = "/";
+                    rowIndex++;
+                    currentI++;
+                }
+            }
+            if (odds.get(colIndex) == 1) {
+                grid[rowIndex][currentI] = "\\";
+                currentI++;
+            }
+            if (odds.get(colIndex) > 1) {
+                grid[rowIndex][currentI] = "\\";
+                currentI++;
+                rowIndex--;
+            }
+            colIndex++;
+           
+
+        }
+
+      //  for (int fHalfRow=0; fHalfRow<=maxHeight-3; fHalfRow++) {
+      //      for (int fHalfCol =0; fHalfCol<maxLoc; fHalfCol++) {
+      //          //if ()
+      //          grid[fHalfRow][fHalfCol] = "|x|";
+      //      }
+      //  }
+
+
+
+      // for (int lHalfRow=0; lHalfRow<=maxHeight-3; lHalfRow++) {
+      //     for (int lHalfCol =maxLoc; lHalfCol<totalLength; lHalfCol++) {
+      //         grid[lHalfRow][lHalfCol] = "|y|";
+      //     }
+      // }
+
+
+
+        //System.out.println(Arrays.deepToString(grid).replace("], ", "]\n"));
+
+
+        toString(grid);
+    }
+    public void toString(String[][] array) {
+        for (int rows = maxHeight; rows >= 0; rows--) {
+            for (int cols = 0; cols < array[0].length; cols++) {
+                System.out.print(array[rows][cols]);
             }
             System.out.println();
+        }
+    }
+
+
+    /**
+     * might have been a good idea
+     * @param list
+     * @param expandedList
+     */
+    public void expandLists(ArrayList<Integer> list, ArrayList<Integer> expandedList) {
+        for (int i : list) {
+            for (int j = 0; j < i; j++) {
+                expandedList.add(1);
+            }
         }
     }
 
