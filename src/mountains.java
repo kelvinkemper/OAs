@@ -3,10 +3,10 @@ import java.util.Arrays;
 
 public class mountains {
 
-    ArrayList<Integer> input = new ArrayList<>(Arrays.asList(1, 1, 3, 1, 2, 3, 5, 2, 1, 2, 2, 3, 7, 2, 3, 1, 2, 1, 3, 5, 2, 3, 1,
+    ArrayList<Integer> input2 = new ArrayList<>(Arrays.asList(1, 1, 3, 1, 2, 3, 5, 2, 1, 2, 2, 3, 7, 2, 3, 1, 2, 1, 3, 5, 2, 3, 1,
             2, 5, 7, 3, 1, 3, 4, 2, 5, 3, 2, 4, 4, 1, 2, 1, 3, 3, 2, 1, 2));
 
-    ArrayList<Integer> input2 = new ArrayList<>(Arrays.asList(10, 7, 12, 2, 4, 7, 2, 4, 1, 2, 6, 6, 3, 2, 1, 4, 7, 2, 7,
+    ArrayList<Integer> input = new ArrayList<>(Arrays.asList(10, 7, 12, 2, 4, 7, 2, 4, 1, 2, 6, 6, 3, 2, 1, 4, 7, 2, 7,
             3, 1, 3, 11, 4, 2, 1, 5, 2, 3, 3, 3, 6, 1, 3, 9, 5, 2, 1, 2, 11, 9, 2, 3, 8, 2, 5, 1, 2, 7, 2, 4, 11, 2, 12));
 
     ArrayList<Integer> evens = new ArrayList<>();
@@ -127,6 +127,7 @@ public class mountains {
 
 
     public void makeGrid() {
+        System.out.println("Max height: " + maxHeight);
         String grid[][] = new String[maxHeight+3][totalLength];
 
       // for (int i = maxHeight-3; i<=maxHeight; i++) {
@@ -135,7 +136,7 @@ public class mountains {
       //     }
       // }
 
-        for (int row = 0; row <= maxHeight-3; row++) {
+        for (int row = 0; row <= maxHeight; row++) {
 
             for(int col = 0; col < totalLength; col++) {
                 // keep track of current row/col
@@ -146,14 +147,16 @@ public class mountains {
         int rowIndex=0;
 
         int currentI=0;
-        while (currentI<maxLoc) {
-           // System.out.println("col index: " +colIndex);
-           // System.out.println("row index: " + rowIndex);
+        while (currentI<totalLength) {
             if (evens.get(colIndex).equals(1)) {
 
                 grid[rowIndex][currentI] = "/";
-                toString(grid);
+
                 currentI++;
+            }
+
+            if (currentI>=totalLength) {
+                break;
             }
 
             else if (evens.get(colIndex) > 1) {
@@ -162,20 +165,32 @@ public class mountains {
                     rowIndex++;
                     currentI++;
                 }
-            }
-            if (odds.get(colIndex) == 1) {
-                grid[rowIndex][currentI] = "\\";
-                currentI++;
-            }
-            if (odds.get(colIndex) > 1) {
-                grid[rowIndex][currentI] = "\\";
-                currentI++;
                 rowIndex--;
             }
-            colIndex++;
-           
 
+            if (currentI>=totalLength) {
+                break;
+            }
+
+            if (odds.get(colIndex).equals(1)) {
+                grid[rowIndex][currentI] = "\\";
+                currentI++;
+            }
+
+            if (currentI>=totalLength) {
+                break;
+            }
+            else if (odds.get(colIndex) > 1) {
+                for (int i = 0; i < odds.get(colIndex); i++) {
+                    grid[rowIndex][currentI] = "\\";
+                    rowIndex--;
+                    currentI++;
+                }
+                rowIndex++;
+            }
+            colIndex++;
         }
+
 
       //  for (int fHalfRow=0; fHalfRow<=maxHeight-3; fHalfRow++) {
       //      for (int fHalfCol =0; fHalfCol<maxLoc; fHalfCol++) {
@@ -220,6 +235,12 @@ public class mountains {
                 expandedList.add(1);
             }
         }
+    }
+
+    public void drawPeak() {
+        System.out.println(" o "); // grid[maxHeight+2][maxLoc]
+        System.out.println("/|\\"); // grid[maxHeight+1][maxLoc]
+        System.out.println("< >"); //grid[maxHeight][maxLoc]
     }
 
 
