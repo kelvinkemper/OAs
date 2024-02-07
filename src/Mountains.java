@@ -1,7 +1,10 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
-public class mountains {
+public class Mountains {
+
+    //TODO read from input
 
     ArrayList<Integer> input2 = new ArrayList<>(Arrays.asList(1, 1, 3, 1, 2, 3, 5, 2, 1, 2, 2, 3, 7, 2, 3, 1, 2, 1, 3, 5, 2, 3, 1,
             2, 5, 7, 3, 1, 3, 4, 2, 5, 3, 2, 4, 4, 1, 2, 1, 3, 3, 2, 1, 2));
@@ -12,9 +15,6 @@ public class mountains {
     ArrayList<Integer> evens = new ArrayList<>();
     ArrayList<Integer> odds = new ArrayList<>();
 
-    ArrayList<Integer> expandedEvens = new ArrayList<>();
-    ArrayList<Integer> expandedOdds = new ArrayList<>();
-
     int maxHeight=0;
     int maxLoc=0;
     int totalLength=0;
@@ -22,25 +22,24 @@ public class mountains {
 
     public void start() {
         setArrays();
-        System.out.println(evens.toString());
-        int evenTotal = totalUpArray(evens);
-        System.out.println(odds.toString());
-        int oddTotal = totalUpArray(odds);
-
         findMaxHeight();
         findTotalLength();
-        makeGrid();
-        buildMountains bm = new buildMountains(this);
-        bm.buildPeaks();
+        make2DGrid();
+
     }
 
+    /**
+     * updates total number slopes of input array
+     */
     public void findTotalLength() {
         for (int i : input) {
             totalLength += i;
         }
-        System.out.println("Total length: " + totalLength);
     }
-    
+
+    /**
+     * calculates peak row index/height
+     */
     public void findMaxHeight() {
         int currentDiff = 0;
         int currHeight = 0;
@@ -51,31 +50,20 @@ public class mountains {
             tempMaxHeight += evens.get(i);
             currHeight += currentDiff;
 
-            //System.out.println(i+". current height: " + currHeight);
             if (tempMaxHeight >= maxHeight) {
                 maxHeight = tempMaxHeight;
                 maxIndex = i;
             }
             tempMaxHeight = currHeight;
         }
-       //     if (currentDiff >0) {
-       //         for (int j = 0; j < evens.get(i); j++) {
-       //             System.out.println("/ ");
-       //         }
-       //     } else if (currentDiff < 0) {
-       //         for (int j = 0; j < odds.get(i); j++) {
-       //             System.out.println("\\ ");
-       //
-       //         }
-       //     } else {
-       //         System.out.print("/ \\ ");
-       //     }
-       //     System.out.println();
-       //
-       // }
-        //System.out.println("max index: " + maxIndex);
-        System.out.println("peak: " + maxHeight + " at space " + calculateMaxHeightLocation(evens, odds, maxIndex));
+        calculateMaxHeightLocation(evens, odds, maxIndex);
+
     }
+
+    /**
+     * checks if an index is even or not
+     * @return
+     */
     public static boolean isEven(int n) {
         if (n%2==0) {
             return true;
@@ -83,17 +71,25 @@ public class mountains {
         return false;
     }
 
+    /**
+     * with the even and odd arrays split, calulate the column index where the peak is
+     * @return peak column index
+     */
     public int calculateMaxHeightLocation(ArrayList<Integer> array1, ArrayList<Integer> array2, int index) {
         int currIndex=0;
         for (int i = 0; i < index; i++) {
             maxLoc += array1.get(i) + array2.get(i);
-           // System.out.println(loc);
             currIndex = i;
         }
         maxLoc += array1.get(currIndex+1);
         return maxLoc;
     }
 
+    /**
+     * gives you the total of an array if needed.
+     * @param array
+     * @return the total in an int
+     */
     public int totalUpArray(ArrayList<Integer> array) {
         int total = 0;
         for (int i = 0; i < array.size(); i++) {
@@ -102,6 +98,9 @@ public class mountains {
         return total;
     }
 
+    /**
+     * splits the input into 2 ArrayList for ease of use
+     */
     public void setArrays() {
         for (int i = 0; i < input.size(); i++) {
             if (isEven(i)) {
@@ -113,32 +112,16 @@ public class mountains {
         }
     }
 
-    public ArrayList<Integer> getInputArrays() {
-        return input;
-    }
+    /**
+     * logic to create a 2D array,
+     * populate it with slopes of mountain
+     */
+    public void make2DGrid() {
+        String grid[][] = new String[maxHeight+4][totalLength+1];
 
-    public ArrayList<Integer> getEvens() {
-        return evens;
-    }
+        for (int row = 0; row <= maxHeight+3; row++) {
 
-    public ArrayList<Integer> getOdds() {
-        return odds;
-    }
-
-
-    public void makeGrid() {
-        System.out.println("Max height: " + maxHeight);
-        String grid[][] = new String[maxHeight+3][totalLength];
-
-      // for (int i = maxHeight-3; i<=maxHeight; i++) {
-      //     for (int col = 0; col < totalLength; col++) {
-      //         grid[i][col] = "";
-      //     }
-      // }
-
-        for (int row = 0; row <= maxHeight; row++) {
-
-            for(int col = 0; col < totalLength; col++) {
+            for(int col = 0; col < totalLength+1; col++) {
                 // keep track of current row/col
                 grid[row][col] = " ";
             }
@@ -158,6 +141,9 @@ public class mountains {
             if (currentI>=totalLength) {
                 break;
             }
+            if (currentI==maxLoc) {
+                currentI++;
+            }
 
             else if (evens.get(colIndex) > 1) {
                 for (int i = 0; i < evens.get(colIndex); i++) {
@@ -170,6 +156,9 @@ public class mountains {
 
             if (currentI>=totalLength) {
                 break;
+            }
+            if (currentI==maxLoc) {
+                currentI++;
             }
 
             if (odds.get(colIndex).equals(1)) {
@@ -191,31 +180,16 @@ public class mountains {
             colIndex++;
         }
 
-
-      //  for (int fHalfRow=0; fHalfRow<=maxHeight-3; fHalfRow++) {
-      //      for (int fHalfCol =0; fHalfCol<maxLoc; fHalfCol++) {
-      //          //if ()
-      //          grid[fHalfRow][fHalfCol] = "|x|";
-      //      }
-      //  }
-
-
-
-      // for (int lHalfRow=0; lHalfRow<=maxHeight-3; lHalfRow++) {
-      //     for (int lHalfCol =maxLoc; lHalfCol<totalLength; lHalfCol++) {
-      //         grid[lHalfRow][lHalfCol] = "|y|";
-      //     }
-      // }
-
-
-
-        //System.out.println(Arrays.deepToString(grid).replace("], ", "]\n"));
-
-
+        addPeak(grid);
         toString(grid);
     }
+
+    /**
+     * Converts the 2d array to output and prints it in reverse
+     * @param array
+     */
     public void toString(String[][] array) {
-        for (int rows = maxHeight; rows >= 0; rows--) {
+        for (int rows = array.length-1; rows >= 0; rows--) {
             for (int cols = 0; cols < array[0].length; cols++) {
                 System.out.print(array[rows][cols]);
             }
@@ -223,32 +197,49 @@ public class mountains {
         }
     }
 
-
     /**
-     * might have been a good idea
-     * @param list
-     * @param expandedList
+     * adds the peak characters to the top of the mountain
+     * @param grid
      */
-    public void expandLists(ArrayList<Integer> list, ArrayList<Integer> expandedList) {
-        for (int i : list) {
-            for (int j = 0; j < i; j++) {
-                expandedList.add(1);
-            }
-        }
+    public void addPeak(String[][] grid) {
+        grid[maxHeight+2][maxLoc-1] = " o ";
+        grid[maxHeight+1][maxLoc-1] = "/|\\";
+        grid[maxHeight][maxLoc+1]= ">";
+        grid[maxHeight][maxLoc-1] = "<";
     }
-
-    public void drawPeak() {
-        System.out.println(" o "); // grid[maxHeight+2][maxLoc]
-        System.out.println("/|\\"); // grid[maxHeight+1][maxLoc]
-        System.out.println("< >"); //grid[maxHeight][maxLoc]
-    }
-
-
 
     public static void main(String args[]) {
-        mountains m = new mountains();
+        Mountains m = new Mountains();
+        InputLogic ip= new InputLogic();
         m.start();
 
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            // Ask for user input
+            System.out.println("Enter numbers separated by spaces (or type 'exit' to quit):");
+            String input = scanner.nextLine();
+
+            if (input.equalsIgnoreCase("exit")) {
+                break;
+            }
+
+            // Split the input string into an array of strings
+            String[] numbers = input.split(" ");
+
+            // Create an ArrayList to store the integers
+            ArrayList<Integer> list = new ArrayList<>();
+
+            // Convert each string to an integer and add it to the list
+            try {
+                for (String number : numbers) {
+                    list.add(Integer.parseInt(number));
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter only numbers separated by spaces.");
+            }
+        }
+        scanner.close();
     }
 }
 
